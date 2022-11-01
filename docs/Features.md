@@ -11,3 +11,5 @@
 - adjustable simulation length
 - adjustable population size
 - use actual data set for simulation
+- add bot users as 'stubborn agents' whose opinions never change
+- use genetic algorithms to opimize news story placement and opinion to move polarized population to consensus
