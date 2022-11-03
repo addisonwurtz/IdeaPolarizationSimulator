@@ -16,7 +16,7 @@ class TestGraph(unittest.TestCase):
 class TestUser(unittest.TestCase):
     def test_valid_user(self):
         test_user = User(1, 0.75, [])
-        self.assertIsInstance(test_user.node, int)
+        self.assertIsInstance(test_user.user_id, int)
         self.assertIsInstance(test_user.opinion_score, float)
 
     def test_invalid_user(self):
