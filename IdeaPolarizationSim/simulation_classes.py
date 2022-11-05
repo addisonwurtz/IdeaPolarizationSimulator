@@ -23,6 +23,7 @@ class SocialNetwork:
                     self.graph.increase_connection_strength(user, connection)
                 else:
                     self.graph.decrease_connection_strength(user, connection)
+        news_item.remove_user_from_infectious_list(user)
 
 
 class Graph:
@@ -32,11 +33,12 @@ class Graph:
         self.update_rate = update_rate
 
     def increase_connection_strength(self, sender, receiver):
-        edge = self.get_edge_string(sender, receiver)
-        self.edge_weights[edge] += self.update_rate
+        edge_string = self.get_edge_string(sender, receiver)
+        edge_weight = self.edge_weights[edge_string]
+        self.edge_weights[edge_string] = edge_weight + self.update_rate
 
     def decrease_connection_strength(self, sender, receiver):
-        edge_string = self.get_edge_weight(sender, receiver)
+        edge_string = self.get_edge_string(sender, receiver)
         edge_weight = self.edge_weights[edge_string]
         self.edge_weights[edge_string] = edge_weight - self.update_rate
 
@@ -86,8 +88,13 @@ class NewsItem:
         self.inoculated_users: [User] = initial_spreader_nodes
 
     def infect_user(self, neighbor: User):
-        self.infectious_users.append(neighbor)
-        self.inoculated_users.append(neighbor)
+        if neighbor not in self.inoculated_users:
+            self.infectious_users.append(neighbor)
+            self.inoculated_users.append(neighbor)
+
+    def remove_user_from_infectious_list(self, user: User):
+        if user in self.infectious_users:
+            self.infectious_users.remove(user)
 
     def update_inoculated_nodes(self):
         for node in self.infectious_users:
