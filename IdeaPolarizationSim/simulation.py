@@ -8,11 +8,10 @@ from IdeaPolarizationSim.simulation_classes import NewsItem
 import toy_graph
 
 update_rate = 0.1
-graph = Graph(toy_graph.nodes, toy_graph.edge_weights, update_rate)
-users = toy_graph.nodes
-news_items = [NewsItem(0, toy_graph.user_1)]
+users: [User] = toy_graph.nodes
+news_items: [NewsItem] = [NewsItem(0, [toy_graph.user_1, toy_graph.user_6])]
 
-social_network = SocialNetwork(graph, users, news_items, update_rate)
+social_network = SocialNetwork(toy_graph.graph, users, news_items, update_rate)
 
 for news_item in social_network.news_items:
 

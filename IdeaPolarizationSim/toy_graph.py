@@ -1,4 +1,4 @@
-from IdeaPolarizationSim.simulation_classes import User
+from IdeaPolarizationSim.simulation_classes import User, Graph
 
 nodes = []
 edge_weights = {}
@@ -26,3 +26,7 @@ edge_weights['5-6'] = 0.8
 user_6.add_connections([user_4, user_5])
 
 nodes = [user_1, user_2, user_3, user_4, user_5, user_6]
+
+update_Rate = 0.1
+
+graph = Graph(nodes, edge_weights, 0.1)
