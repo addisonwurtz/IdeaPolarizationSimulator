@@ -44,15 +44,13 @@ class Graph:
 
     def get_edge_string(self, user1, user2):
         edge_string = ''
-        if user1.user_id < user2.user_id:
-            edge_string = str(user1.user_id) + '-' + str(user2.user_id)
-        elif user1.user_id > user2.user_id:
-            edge_string = str(user2.user_id) + '-' + str(user1.user_id)
-        if user1.user_id == user2.user_id:
-            if user1 is user2:
-                raise ValueError('Error: get_edge_string() user1 is the same as user2')
-            else:
-                raise ValueError('Error: Two nodes cannot have the same name')
+        edge_string = '-'.join(sorted([str(user1.user_id), str(user2.user_id)]))
+        # if user1.user_id < user2.user_id:
+        #    edge_string = str(user1.user_id) + '-' + str(user2.user_id)
+        # elif user1.user_id > user2.user_id:
+        #    edge_string = str(user2.user_id) + '-' + str(user1.user_id)
+        if user1 is user2:
+            raise ValueError('Error: get_edge_string() user1 is the same as user2')
         return edge_string
 
     def get_edge_weight(self, user1, user2):

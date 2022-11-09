@@ -13,9 +13,10 @@ news_items: [NewsItem] = [NewsItem(0, [toy_graph.user_1, toy_graph.user_6])]
 
 social_network = SocialNetwork(toy_graph.graph, users, news_items, update_rate)
 
+time = 1
+
 for news_item in social_network.news_items:
 
-    time = 1
     print(f'Nodes that can spread news item: {[user.user_id for user in news_item.infectious_users]}')
     print(f'Nodes that have been infected by news item: {[user.user_id for user in news_item.inoculated_users]}')
 
