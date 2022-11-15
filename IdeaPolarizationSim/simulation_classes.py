@@ -27,35 +27,29 @@ class SocialNetwork:
 
 
 class Graph:
-    def __init__(self, nodes: [], edge_weights: {}, update_rate):
+    def __init__(self, nodes: [], edges: [], edge_weights: {}):
         self.nodes = nodes
         self.edge_weights = edge_weights
-        self.update_rate = update_rate
+        self.edges = edges
 
     def increase_connection_strength(self, sender, receiver):
-        edge_string = self.get_edge_string(sender, receiver)
+        edge_string = self.get_edge_tuple(sender, receiver)
         edge_weight = self.edge_weights[edge_string]
         self.edge_weights[edge_string] = edge_weight + self.update_rate
 
     def decrease_connection_strength(self, sender, receiver):
-        edge_string = self.get_edge_string(sender, receiver)
+        edge_string = self.get_edge_tuple(sender, receiver)
         edge_weight = self.edge_weights[edge_string]
         self.edge_weights[edge_string] = edge_weight - self.update_rate
 
-    def get_edge_string(self, user1, user2):
-        edge_string = ''
-        edge_string = '-'.join(sorted([str(user1.user_id), str(user2.user_id)]))
-        # if user1.user_id < user2.user_id:
-        #    edge_string = str(user1.user_id) + '-' + str(user2.user_id)
-        # elif user1.user_id > user2.user_id:
-        #    edge_string = str(user2.user_id) + '-' + str(user1.user_id)
-        if user1 is user2:
-            raise ValueError('Error: get_edge_string() user1 is the same as user2')
-        return edge_string
+    @staticmethod
+    def get_edge_tuple(user1, user2):
+        edge_tuple: (int, int) = (user1.user_id, user2.user_id)
+        return edge_tuple
 
     def get_edge_weight(self, user1, user2):
-        edge_string = self.get_edge_string(user1, user2)
-        return self.edge_weights[edge_string]
+        edge = self.get_edge_tuple(user1, user2)
+        return self.edge_weights[edge]
 
 
 class User:

@@ -8,8 +8,8 @@ class TestGraph(unittest.TestCase):
         graph = Graph(nodes, edge_weights, 0.1)
         self.assertIn(user_1, graph.nodes)
         self.assertIn(user_5, graph.nodes)
-        self.assertEqual(graph.edge_weights['1-2'], 0.8)
-        self.assertEqual(graph.edge_weights['3-4'], 0.3)
+        self.assertEqual(graph.edge_weights[(1, 2)], 0.8)
+        self.assertEqual(graph.edge_weights[(3, 4)], 0.3)
         self.assertEqual(graph.update_rate, 0.1)
 
 
