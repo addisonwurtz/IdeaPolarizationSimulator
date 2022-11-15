@@ -2,9 +2,9 @@ from random import random
 
 
 class SocialNetwork:
-    def __init__(self, graph, users: [], news_items: [], update_rate):
+    def __init__(self, graph, news_items: [], update_rate):
         self.graph = graph
-        self.users = users
+        self.users = graph.nodes
         self.news_items = news_items
         self.update_rate = update_rate
 
@@ -14,6 +14,9 @@ class SocialNetwork:
         return (edge_weight ** 2) + selective_exposure
 
     def share_news_item(self, user, news_item):
+        if user not in news_item.infectious_users:
+            raise UserNotInfectiousError(f'user {user.user_id} is not in the infectious user list for news item '
+                                         f'{news_item.item_id}')
         connections: [User] = user.get_connections()
         for connection in connections:
             if connection not in news_item.inoculated_users:
@@ -27,7 +30,7 @@ class SocialNetwork:
 
 
 class Graph:
-    def __init__(self, nodes: [], edge_weights: {}, update_rate):
+    def __init__(self, nodes: [], edge_weights: {}, update_rate=0.1):
         self.nodes = nodes
         self.edge_weights = edge_weights
         self.update_rate = update_rate
@@ -42,27 +45,29 @@ class Graph:
         edge_weight = self.edge_weights[edge_string]
         self.edge_weights[edge_string] = edge_weight - self.update_rate
 
-    def get_edge_string(self, user1, user2):
-        edge_string = ''
+    @staticmethod
+    def get_edge_string(user1, user2):
         edge_string = '-'.join(sorted([str(user1.user_id), str(user2.user_id)]))
-        # if user1.user_id < user2.user_id:
-        #    edge_string = str(user1.user_id) + '-' + str(user2.user_id)
-        # elif user1.user_id > user2.user_id:
-        #    edge_string = str(user2.user_id) + '-' + str(user1.user_id)
         if user1 is user2:
-            raise ValueError('Error: get_edge_string() user1 is the same as user2')
+            raise ValueError('Error: in get_edge_string() user1 is the same as user2')
         return edge_string
 
     def get_edge_weight(self, user1, user2):
-        edge_string = self.get_edge_string(user1, user2)
-        return self.edge_weights[edge_string]
+        try:
+            edge_string = self.get_edge_string(user1, user2)
+            return self.edge_weights[edge_string]
+        except ValueError as e:
+            raise e
+        except KeyError:
+            raise KeyError(f'Error: Edge between user {user1.user_id} and user {user2.user_id} does not exist.')
 
 
 class User:
     def __init__(self, user_id: int, opinion_score: float, connections, update_rate=0.1):
         self.user_id: int = user_id
         self.opinion_score: float = opinion_score
-        self.connections: [User] = connections
+        self.connections: [User] = []
+        self.connections += connections
         self.update_rate: float = update_rate
 
     def get_connections(self):
@@ -79,14 +84,17 @@ class User:
 
 
 class NewsItem:
-    def __init__(self, opinion_score: float, initial_spreader_nodes: [User]):
+    def __init__(self, item_id: int, opinion_score: float, initial_spreader_nodes: [User]):
+        self.item_id = item_id
         self.opinion_score: float = opinion_score
         self.initial_spreader_nodes: [User] = initial_spreader_nodes
-        self.infectious_users: [User] = initial_spreader_nodes
-        self.inoculated_users: [User] = initial_spreader_nodes
+        self.infectious_users: [User] = []
+        self.infectious_users += initial_spreader_nodes
+        self.inoculated_users: [User] = []
+        self.inoculated_users += initial_spreader_nodes
 
     def infect_user(self, neighbor: User):
-        if neighbor not in self.inoculated_users:
+        if neighbor not in self.inoculated_users and neighbor not in self.infectious_users:
             self.infectious_users.append(neighbor)
             self.inoculated_users.append(neighbor)
 
@@ -94,9 +102,6 @@ class NewsItem:
         if user in self.infectious_users:
             self.infectious_users.remove(user)
 
-    def update_inoculated_nodes(self):
-        for node in self.infectious_users:
-            if node not in self.inoculated_users:
-                self.inoculated_users.append(node)
 
-
+class UserNotInfectiousError(Exception):
+    pass
