@@ -48,6 +48,9 @@ class Graph:
     def get_graph_image(self, time):
         graph = pgv.AGraph(directed=False)
 
+        if time % 2 == 0:
+            graph.graph_attr['color'] = '#1100FF'
+
         for edge in self.edge_weights:
             graph.add_edge(edge)
             graph.add_edges_from(self.edge_weights)

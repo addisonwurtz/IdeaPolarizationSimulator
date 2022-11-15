@@ -6,6 +6,7 @@ from IdeaPolarizationSim.simulation_classes import NewsItem
 
 import toy_graph
 
+
 class Simulation:
     def __init__(self, users, news_items, update_rate=0.1):
         self.users = users
@@ -27,13 +28,11 @@ class Simulation:
                 except Exception as e:
                     print(e)
 
-        self.social_network.graph.get_graph_image(self.time)  # Is this violating Law of Demeter?
-        self.time += 1
-
-        # for news_item in self.social_network.news_items:
-        #    print(f'Number of users infected with story: {len(news_item.inoculated_users)}')
-        #    print(f'Users infected with story: {[inoculated_user.user_id for inoculated_user in news_item.inoculated_users]}')
-        #    print(f'Simulation time: {self.time}')
+            self.social_network.graph.get_graph_image(self.time)  # Is this violating Law of Demeter?
+            self.time += 1
+            print(f'Number of users infected with story: {len(news_item.inoculated_users)}')
+            print(f'Users infected with story: {[inoculated_user.user_id for inoculated_user in news_item.inoculated_users]}')
+            print(f'Simulation time: {self.time}')
 
 
 

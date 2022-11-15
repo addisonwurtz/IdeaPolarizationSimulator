@@ -11,7 +11,7 @@ class App:
         self._running = True
         self._display_surf = None
         self._image_surf = None
-        self.size = self.width, self.height = 1280, 960
+        self.size = self.width, self.height = 640, 480
         self.simulation = Simulation(toy_graph.nodes, [NewsItem(1, 0, [toy_graph.user_1, toy_graph.user_6])])
 
     def on_init(self):
@@ -19,16 +19,17 @@ class App:
         self._display_surf = pygame.display.set_mode(self.size, pygame.HWSURFACE | pygame.DOUBLEBUF)
         self._running = True
         self._image_surf = pygame.image.load('Graph_Images/graph0.png').convert()
-        self.simulation.graph.get_graph_image(time=0)
+        self.simulation.social_network.graph.get_graph_image(time=0)
 
     def on_event(self, event):
         if event.type == pygame.QUIT:
             self._running = False
 
     def on_loop(self):
-        if self.simulation.time > 100:
-            QUIT
-        self.simulation.update_simulation()
+        if self.simulation.time > 10:
+            pygame.QUIT
+        else:
+            self.simulation.update_simulation()
 
     def on_render(self):
         self._display_surf.blit(self._image_surf, (0, 0))
