@@ -36,26 +36,30 @@ class Graph:
         self.update_rate = update_rate
 
     def increase_connection_strength(self, sender, receiver):
-        edge_string = self.get_edge_string(sender, receiver)
-        edge_weight = self.edge_weights[edge_string]
-        self.edge_weights[edge_string] = edge_weight + self.update_rate
+        edge = self.get_edge(sender, receiver)
+        edge_weight = self.edge_weights[edge]
+        self.edge_weights[edge] = edge_weight + self.update_rate
 
     def decrease_connection_strength(self, sender, receiver):
-        edge_string = self.get_edge_string(sender, receiver)
-        edge_weight = self.edge_weights[edge_string]
-        self.edge_weights[edge_string] = edge_weight - self.update_rate
+        edge = self.get_edge(sender, receiver)
+        edge_weight = self.edge_weights[edge]
+        self.edge_weights[edge] = edge_weight - self.update_rate
+
 
     @staticmethod
-    def get_edge_string(user1, user2):
-        edge_string = '-'.join(sorted([str(user1.user_id), str(user2.user_id)]))
-        if user1 is user2:
-            raise ValueError('Error: in get_edge_string() user1 is the same as user2')
-        return edge_string
+    def get_edge(user1, user2):
+        if user1.user_id < user2.user_id:
+            edge = (user1.user_id, user2.user_id)
+        elif user1.user_id > user2.user_id:
+            edge = (user2.user_id, user1.user_id)
+        else:
+            raise ValueError('Node cannot share edge with itself.')
+        return edge
 
     def get_edge_weight(self, user1, user2):
         try:
-            edge_string = self.get_edge_string(user1, user2)
-            return self.edge_weights[edge_string]
+            edge = self.get_edge(user1, user2)
+            return self.edge_weights[edge]
         except ValueError as e:
             raise e
         except KeyError:

@@ -45,46 +45,46 @@ class TestGraph(unittest.TestCase):
         test_graph = Graph(toy_graph.nodes, toy_graph.edge_weights, 0.1)
         self.assertIn(toy_graph.user_1, test_graph.nodes)
         self.assertIn(toy_graph.user_5, test_graph.nodes)
-        self.assertEqual(test_graph.edge_weights['1-2'], 0.8)
-        self.assertEqual(test_graph.edge_weights['3-4'], 0.3)
+        self.assertEqual(test_graph.edge_weights[(1, 2)], 0.8)
+        self.assertEqual(test_graph.edge_weights[(3, 4)], 0.3)
         self.assertEqual(test_graph.update_rate, 0.1)
 
     def test_increase_connection_strength(self):
         user1 = User(1, 0.75, [])
         user2 = User(2, -0.5, [user1])
         user1.add_connections([user2])
-        edge_weight = {'1-2': 0.5}
+        edge_weight = {(1, 2): 0.5}
         test_graph = Graph([user1, user2], edge_weight, update_rate=0.1)
 
         test_graph.increase_connection_strength(user1, user2)
-        self.assertEqual(0.6, test_graph.edge_weights['1-2'])
+        self.assertEqual(0.6, test_graph.edge_weights[(1, 2)])
 
     def test_decrease_connection_strength(self):
         user1 = User(1, 0.75, [])
         user2 = User(2, -0.5, [user1])
         user1.add_connections([user2])
-        edge_weight = {'1-2': 0.5}
+        edge_weight = {(1, 2): 0.5}
         test_graph = Graph([user1, user2], edge_weight, update_rate=0.1)
 
         test_graph.decrease_connection_strength(user1, user2)
-        self.assertEqual(0.4, test_graph.edge_weights['1-2'])
+        self.assertEqual(0.4, test_graph.edge_weights[(1, 2)])
 
     def test_get_edge_string(self):
         user1 = User(1, 0.2, [])
         user2 = User(2, -0.4, [])
 
-        self.assertEqual('1-2', Graph.get_edge_string(user1, user2))
-        self.assertEqual('1-2', Graph.get_edge_string(user2, user1))
+        self.assertEqual((1, 2), Graph.get_edge(user1, user2))
+        self.assertEqual((1, 2), Graph.get_edge(user2, user1))
 
     def test_get_edge_string_raises_value_error_when_nodes_are_the_same(self):
-        user = Mock()
+        user = User(1, 1.2, [])
         with self.assertRaises(ValueError):
-            Graph.get_edge_string(user, user)
+            Graph.get_edge(user, user)
 
     def test_get_edge_weight_for_valid_edge(self):
         user1 = User(1, 0.2, [])
         user2 = User(2, -0.4, [])
-        edge_weight = {'1-2': 0.65}
+        edge_weight = {(1, 2): 0.65}
 
         test_graph = Graph([user1, user2], edge_weight)
 
@@ -92,14 +92,14 @@ class TestGraph(unittest.TestCase):
         self.assertEqual(0.65, test_graph.get_edge_weight(user2, user1))
 
     def test_get_edge_weight_catches_value_error_when_args_Are_the_same_node(self):
-        user = Mock()
+        user = User(1, 0.8, [])
         test_graph = Graph(user, {})
         with self.assertRaises(ValueError):
             test_graph.get_edge_weight(user, user)
 
     def test_get_edge_weight_on_edge_not_in_graph(self):
-        user1 = Mock()
-        user2 = Mock()
+        user1 = User(1, 0.8, [])
+        user2 = User(2, -0.8, [])
         test_graph = Graph(user1, {})
         with self.assertRaises(KeyError):
             test_graph.get_edge_weight(user1, user2)
