@@ -1,5 +1,5 @@
 from random import random
-
+import pygraphviz as pgv
 
 class SocialNetwork:
     def __init__(self, graph, news_items: [], update_rate):
@@ -45,6 +45,15 @@ class Graph:
         edge_weight = self.edge_weights[edge]
         self.edge_weights[edge] = edge_weight - self.update_rate
 
+    def get_graph_image(self, time):
+        graph = pgv.AGraph(directed=False)
+
+        for edge in self.edge_weights:
+            graph.add_edge(edge)
+            graph.add_edges_from(self.edge_weights)
+
+        file_name = 'Graph_Images/graph' + str(time) + '.png'
+        graph.draw(file_name, prog='fdp')
 
     @staticmethod
     def get_edge(user1, user2):
