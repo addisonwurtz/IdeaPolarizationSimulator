@@ -1,5 +1,9 @@
+import os
 from random import random
 import pygraphviz as pgv
+
+from IdeaPolarizationSim.graph_visualization import set_graph_attributes
+
 
 class SocialNetwork:
     def __init__(self, graph, news_items: [], update_rate):
@@ -29,7 +33,7 @@ class SocialNetwork:
         news_item.remove_user_from_infectious_list(user)
 
 
-class Graph:
+class Graph_Data:
     def __init__(self, nodes: [], edge_weights: {}, update_rate=0.1):
         self.nodes = nodes
         self.edge_weights = edge_weights
@@ -47,9 +51,7 @@ class Graph:
 
     def get_graph_image(self, time):
         graph = pgv.AGraph(directed=False)
-
-        if time % 2 == 0:
-            graph.graph_attr['color'] = '#1100FF'
+        set_graph_attributes(graph)
 
         for edge in self.edge_weights:
             graph.add_edge(edge)

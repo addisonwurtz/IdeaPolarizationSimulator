@@ -1,6 +1,6 @@
 from random import random
 from IdeaPolarizationSim.simulation_classes import SocialNetwork
-from IdeaPolarizationSim.simulation_classes import Graph
+from IdeaPolarizationSim.simulation_classes import Graph_Data
 from IdeaPolarizationSim.simulation_classes import User
 from IdeaPolarizationSim.simulation_classes import NewsItem
 
@@ -31,7 +31,8 @@ class Simulation:
             self.social_network.graph.get_graph_image(self.time)  # Is this violating Law of Demeter?
             self.time += 1
             print(f'Number of users infected with story: {len(news_item.inoculated_users)}')
-            print(f'Users infected with story: {[inoculated_user.user_id for inoculated_user in news_item.inoculated_users]}')
+            print(f'Users infected with story: '
+                  f'{[inoculated_user.user_id for inoculated_user in news_item.inoculated_users]}')
             print(f'Simulation time: {self.time}')
 
 

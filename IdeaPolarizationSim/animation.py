@@ -1,3 +1,5 @@
+import os
+
 import pygame
 from pygame import image
 from pygame.locals import *
@@ -18,6 +20,7 @@ class App:
         pygame.init()
         self._display_surf = pygame.display.set_mode(self.size, pygame.HWSURFACE | pygame.DOUBLEBUF)
         self._running = True
+        self.simulation.social_network.graph.get_graph_image(0)
         self._image_surf = pygame.image.load('Graph_Images/graph0.png').convert()
         self.simulation.social_network.graph.get_graph_image(time=0)
 
@@ -32,11 +35,12 @@ class App:
             self.simulation.update_simulation()
 
     def on_render(self):
-        self._display_surf.blit(self._image_surf, (0, 0))
+        self._display_surf.blit(self._image_surf, (200, 100))
         pygame.display.flip()
 
     def on_cleanup(self):
         pygame.quit()
+        # self.delete_graph_images()
 
     def on_execute(self):
         if self.on_init() == False:
@@ -48,6 +52,12 @@ class App:
             self.on_loop()
             self.on_render()
         self.on_cleanup()
+
+    def delete_graph_images(self):
+        file_name = ''
+        for time in range(0, self.simulation.time):
+            file_name = 'Graph_Images/graph' + str(time) + '.png'
+        os.remove(file_name)
 
 
 if __name__ == "__main__":

@@ -1,10 +1,21 @@
 import pygraphviz as pgv
-import toy_graph
 
-graph = pgv.AGraph(directed=False)
 
-for edge in toy_graph.edge_weights:
-    graph.add_edge(edge)
-    graph.add_edges_from(toy_graph.edge_weights)
+def set_graph_attributes(graph):
+    graph.graph_attr['label'] = 'Social Network'
+    graph.graph_attr['center'] = 'True'
+    graph.graph_attr['bgcolor'] = 'lightblue'
 
-graph.draw('Graph_Images/graph.png', prog='fdp')
+    graph.node_attr['shape'] = 'circle'
+    graph.node_attr['style'] = 'filled'
+
+
+class GraphVisualization:
+    def __init__(self):
+        self.graph = pgv.AGraph(directed=False, label='Social Network', background='transparent')
+
+    def read_graph_date(graph_data):
+        pass
+
+    def set_node_attributes(graph):
+        pass
