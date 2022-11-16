@@ -53,6 +53,8 @@ class Graph_Data:
         graph = pgv.AGraph(directed=False)
         set_graph_attributes(graph)
 
+        graph.graph_attr['bgcolor'] = 'royalblue1'
+
         for edge in self.edge_weights:
             graph.add_edge(edge)
             graph.add_edges_from(self.edge_weights)

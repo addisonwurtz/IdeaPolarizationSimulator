@@ -5,6 +5,7 @@ def set_graph_attributes(graph):
     graph.graph_attr['label'] = 'Social Network'
     graph.graph_attr['center'] = 'True'
     graph.graph_attr['bgcolor'] = 'lightblue'
+    # graph.graph_attr['colorscheme'] = ''
 
     graph.node_attr['shape'] = 'circle'
     graph.node_attr['style'] = 'filled'
