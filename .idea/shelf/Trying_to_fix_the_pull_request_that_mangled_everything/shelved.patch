@@ -1,0 +1,69 @@
+Index: IdeaPolarizationSim/simulation_classes.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from random import random\r\n\r\n\r\nclass SocialNetwork:\r\n    def __init__(self, graph, users: [], news_items: [], update_rate):\r\n        self.graph = graph\r\n        self.users = users\r\n        self.news_items = news_items\r\n        self.update_rate = update_rate\r\n\r\n    def probability_of_infection(self, user, neighbor, news_item):\r\n        edge_weight = self.graph.get_edge_weight(user, neighbor)\r\n        selective_exposure = (1 - edge_weight) * (1 - abs(news_item.opinion_score - neighbor.opinion_score))\r\n        return (edge_weight ** 2) + selective_exposure\r\n\r\n    def share_news_item(self, user, news_item):\r\n        connections: [User] = user.get_connections()\r\n        for connection in connections:\r\n            if connection not in news_item.inoculated_users:\r\n                if random() < self.probability_of_infection(user, connection, news_item):\r\n                    news_item.infect_user(connection)\r\n                    connection.update_opinion(news_item.opinion_score)\r\n                    self.graph.increase_connection_strength(user, connection)\r\n                else:\r\n                    self.graph.decrease_connection_strength(user, connection)\r\n        news_item.remove_user_from_infectious_list(user)\r\n\r\n\r\nclass Graph:\r\n    def __init__(self, nodes: [], edge_weights: {}, update_rate):\r\n        self.nodes = nodes\r\n        self.edge_weights = edge_weights\r\n        self.update_rate = update_rate\r\n\r\n    def increase_connection_strength(self, sender, receiver):\r\n        edge_string = self.get_edge_string(sender, receiver)\r\n        edge_weight = self.edge_weights[edge_string]\r\n        self.edge_weights[edge_string] = edge_weight + self.update_rate\r\n\r\n    def decrease_connection_strength(self, sender, receiver):\r\n        edge_string = self.get_edge_string(sender, receiver)\r\n        edge_weight = self.edge_weights[edge_string]\r\n        self.edge_weights[edge_string] = edge_weight - self.update_rate\r\n\r\n    def get_edge_string(self, user1, user2):\r\n        edge_string = ''\r\n        edge_string = '-'.join(sorted([str(user1.user_id), str(user2.user_id)]))\r\n        # if user1.user_id < user2.user_id:\r\n        #    edge_string = str(user1.user_id) + '-' + str(user2.user_id)\r\n        # elif user1.user_id > user2.user_id:\r\n        #    edge_string = str(user2.user_id) + '-' + str(user1.user_id)\r\n        if user1 is user2:\r\n            raise ValueError('Error: get_edge_string() user1 is the same as user2')\r\n        return edge_string\r\n\r\n    def get_edge_weight(self, user1, user2):\r\n        edge_string = self.get_edge_string(user1, user2)\r\n        return self.edge_weights[edge_string]\r\n\r\n\r\nclass User:\r\n    def __init__(self, user_id: int, opinion_score: float, connections, update_rate=0.1):\r\n        self.user_id: int = user_id\r\n        self.opinion_score: float = opinion_score\r\n        self.connections: [User] = connections\r\n        self.update_rate: float = update_rate\r\n\r\n    def get_connections(self):\r\n        return self.connections\r\n\r\n    def add_connections(self, new_connections):\r\n        self.connections += new_connections\r\n\r\n    def update_opinion(self, news_opinion_score):\r\n        if news_opinion_score > self.opinion_score:\r\n            self.opinion_score += self.update_rate * news_opinion_score\r\n        elif news_opinion_score < self.opinion_score:\r\n            self.opinion_score -= self.update_rate * news_opinion_score\r\n\r\n\r\nclass NewsItem:\r\n    def __init__(self, opinion_score: float, initial_spreader_nodes: [User]):\r\n        self.opinion_score: float = opinion_score\r\n        self.initial_spreader_nodes: [User] = initial_spreader_nodes\r\n        self.infectious_users: [User] = initial_spreader_nodes\r\n        self.inoculated_users: [User] = initial_spreader_nodes\r\n\r\n    def infect_user(self, neighbor: User):\r\n        if neighbor not in self.inoculated_users:\r\n            self.infectious_users.append(neighbor)\r\n            self.inoculated_users.append(neighbor)\r\n\r\n    def remove_user_from_infectious_list(self, user: User):\r\n        if user in self.infectious_users:\r\n            self.infectious_users.remove(user)\r\n\r\n    def update_inoculated_nodes(self):\r\n        for node in self.infectious_users:\r\n            if node not in self.inoculated_users:\r\n                self.inoculated_users.append(node)\r\n\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/IdeaPolarizationSim/simulation_classes.py b/IdeaPolarizationSim/simulation_classes.py
+--- a/IdeaPolarizationSim/simulation_classes.py	(revision 7d4a8edde3b920ca4c8086a32795807e6fb23911)
++++ b/IdeaPolarizationSim/simulation_classes.py	(date 1668481882405)
+@@ -14,6 +14,9 @@
+         return (edge_weight ** 2) + selective_exposure
+ 
+     def share_news_item(self, user, news_item):
++        if user not in news_item.infectious_users:
++            raise UserNotInfectiousError(f'user {user.user_id} is not in the infectious user list for news item '
++                                         f'{news_item.item_id}')
+         connections: [User] = user.get_connections()
+         for connection in connections:
+             if connection not in news_item.inoculated_users:
+@@ -99,4 +102,5 @@
+             if node not in self.inoculated_users:
+                 self.inoculated_users.append(node)
+ 
+-
++class UserNotInfectiousError(Exception):
++    pass
+Index: IdeaPolarizationSim/simulation.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from random import random\r\nfrom IdeaPolarizationSim.simulation_classes import SocialNetwork\r\nfrom IdeaPolarizationSim.simulation_classes import Graph\r\nfrom IdeaPolarizationSim.simulation_classes import User\r\nfrom IdeaPolarizationSim.simulation_classes import NewsItem\r\n\r\n\r\nimport toy_graph\r\n\r\nupdate_rate = 0.1\r\nusers: [User] = toy_graph.nodes\r\nnews_items: [NewsItem] = [NewsItem(0, [toy_graph.user_1, toy_graph.user_6])]\r\n\r\nsocial_network = SocialNetwork(toy_graph.graph, users, news_items, update_rate)\r\n\r\ntime = 1\r\n\r\nfor news_item in social_network.news_items:\r\n\r\n    print(f'Nodes that can spread news item: {[user.user_id for user in news_item.infectious_users]}')\r\n    print(f'Nodes that have been infected by news item: {[user.user_id for user in news_item.inoculated_users]}')\r\n\r\n    for user in news_item.infectious_users:\r\n        social_network.share_news_item(user, news_item)\r\n\r\n    time += 1\r\n\r\nfor news_item in social_network.news_items:\r\n    print(f'Number of users infected with story: {len(news_item.inoculated_users)}')\r\n    print(f'Users infected with story: {[inoculated_user.user_id for inoculated_user in news_item.inoculated_users]}')\r\n\r\n\r\n\r\n\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/IdeaPolarizationSim/simulation.py b/IdeaPolarizationSim/simulation.py
+--- a/IdeaPolarizationSim/simulation.py	(revision 7d4a8edde3b920ca4c8086a32795807e6fb23911)
++++ b/IdeaPolarizationSim/simulation.py	(date 1668481882391)
+@@ -9,9 +9,9 @@
+ 
+ update_rate = 0.1
+ users: [User] = toy_graph.nodes
+-news_items: [NewsItem] = [NewsItem(0, [toy_graph.user_1, toy_graph.user_6])]
++news_items: [NewsItem] = [NewsItem(1, 0, [toy_graph.user_1, toy_graph.user_6])]
+ 
+-social_network = SocialNetwork(toy_graph.graph, users, news_items, update_rate)
++social_network = SocialNetwork(toy_graph.graph, news_items, update_rate)
+ 
+ time = 1
+ 
+@@ -21,14 +21,17 @@
+     print(f'Nodes that have been infected by news item: {[user.user_id for user in news_item.inoculated_users]}')
+ 
+     for user in news_item.infectious_users:
+-        social_network.share_news_item(user, news_item)
++        try:
++            social_network.share_news_item(user, news_item)
++        except Exception as e:
++            print(e)
+ 
+     time += 1
+ 
+ for news_item in social_network.news_items:
+     print(f'Number of users infected with story: {len(news_item.inoculated_users)}')
+     print(f'Users infected with story: {[inoculated_user.user_id for inoculated_user in news_item.inoculated_users]}')
+-
++    print(f'Simulation time: {time}')
+ 
+ 
+ 
