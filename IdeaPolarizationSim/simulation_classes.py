@@ -53,7 +53,10 @@ class Graph_Data:
         graph = pgv.AGraph(directed=False)
         set_graph_attributes(graph)
 
-        graph.graph_attr['bgcolor'] = 'royalblue1'
+        if time % 2 == 0:
+            graph.graph_attr['bgcolor'] = 'orangered1'
+        else:
+            graph.graph_attr['bgcolor'] = 'royalblue1'
 
         for edge in self.edge_weights:
             graph.add_edge(edge)
