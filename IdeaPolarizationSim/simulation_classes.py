@@ -2,7 +2,7 @@ import os
 from random import random
 import pygraphviz as pgv
 
-from IdeaPolarizationSim.graph_visualization import set_graph_attributes
+from IdeaPolarizationSim.graph_visualization import get_visual_graph
 
 
 class SocialNetwork:
@@ -50,20 +50,11 @@ class Graph_Data:
         self.edge_weights[edge] = edge_weight - self.update_rate
 
     def get_graph_image(self, time):
-        graph = pgv.AGraph(directed=False)
-        set_graph_attributes(graph)
+        visual_graph = get_visual_graph(self)
 
-        if time % 2 == 0:
-            graph.graph_attr['bgcolor'] = 'orangered1'
-        else:
-            graph.graph_attr['bgcolor'] = 'royalblue1'
-
-        for edge in self.edge_weights:
-            graph.add_edge(edge)
-            graph.add_edges_from(self.edge_weights)
 
         file_name = 'Graph_Images/graph' + str(time) + '.png'
-        graph.draw(file_name, prog='fdp')
+        visual_graph.graph.draw(file_name, prog='fdp')
 
     @staticmethod
     def get_edge(user1, user2):

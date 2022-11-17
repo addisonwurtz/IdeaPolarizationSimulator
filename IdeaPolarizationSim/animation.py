@@ -9,12 +9,12 @@ from IdeaPolarizationSim.simulation_classes import NewsItem
 
 
 class App:
-    def __init__(self):
+    def __init__(self, simulation):
         self._running = True
         self._display_surf = None
         self._image_surf = None
         self.size = self.width, self.height = 640, 480
-        self.simulation = Simulation(toy_graph.nodes, [NewsItem(1, 0, [toy_graph.user_1, toy_graph.user_6])])
+        self.simulation = simulation
         self.time = 0
 
     def on_init(self):
@@ -65,5 +65,7 @@ class App:
 
 
 if __name__ == "__main__":
-    theApp = App()
+    news_items =[NewsItem(1, 0, [toy_graph.user_1, toy_graph.user_6])]
+    simulation = Simulation(toy_graph.nodes, news_items)
+    theApp = App(simulation)
     theApp.on_execute()
