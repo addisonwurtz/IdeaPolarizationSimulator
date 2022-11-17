@@ -4,7 +4,7 @@ nodes = []
 edge_weights = {}
 
 user_1 = User(1, 1, [])
-user_2 = User(2, 0.9, [])
+user_2 = User(2, -0.9, [])
 user_3 = User(3, 0.6, [])
 user_4 = User(4, -0.2, [])
 user_5 = User(5, -0.6, [])
@@ -24,12 +24,11 @@ user_2.add_connections([user_1, user_8, user_10])
 edge_weights[(2, 3)] = 0.7
 edge_weights[(2, 8)] = 0.8
 edge_weights[(2, 10)] = 0.5
-user_3.add_connections([user_1, user_2, user_4, user_8, user_9, user_10])
-edge_weights[(3, 4)] = 0.3
+user_3.add_connections([user_1, user_2, user_8, user_9, user_10])
 edge_weights[(3, 8)] = 0.8
 edge_weights[(3, 9)] = 0.7
 edge_weights[(3, 10)] = 0.5
-user_4.add_connections([user_3, user_5, user_6, user_7, user_10])
+user_4.add_connections([user_5, user_6, user_7, user_10])
 edge_weights[(4, 5)] = 0.5
 edge_weights[(4, 6)] = 0.7
 edge_weights[(4, 7)] = 1.0

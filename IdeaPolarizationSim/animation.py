@@ -1,4 +1,5 @@
 import os
+import sys
 
 import pygame
 from pygame import image
@@ -13,7 +14,7 @@ class Animation:
         self._running = True
         self._display_surf = None
         self._image_surf = None
-        self.size = self.width, self.height = 640, 480
+        self.size = self.width, self.height = 800, 600
         self.simulation = simulation
         self.time = 0
 
@@ -28,18 +29,20 @@ class Animation:
     def on_event(self, event):
         if event.type == pygame.QUIT:
             self._running = False
+            sys.exit()
 
     def on_loop(self):
-        self.time = self.simulation.update_simulation()
-        if self.simulation.current_news_item is None:
-            pygame.QUIT
-        else:
+        if self.simulation.current_news_item is not None and self.simulation.time < self.simulation.max_time:
+            self.time = self.simulation.update_simulation()
             image_name = 'Graph_Images/graph' + str(self.time) + '.png'
             self._image_surf = pygame.image.load(image_name)
+            self._image_surf.get_rect()
+        else:
+            pygame.QUIT
 
     def on_render(self):
         self._display_surf.fill('white')
-        self._display_surf.blit(self._image_surf, (200, 100))
+        self._display_surf.blit(self._image_surf, (100, 50))
         pygame.display.flip()
         # pygame.time.delay(100)
 
@@ -60,7 +63,7 @@ class Animation:
 
     def delete_graph_images(self):
         file_name = ''
-        for time in range(1, self.simulation.time - 2):
+        for time in range(1, self.simulation.time):
             file_name = 'Graph_Images/graph' + str(time) + '.png'
             os.remove(file_name)
 
@@ -84,7 +87,7 @@ if __name__ == "__main__":
 
     social_network = SocialNetwork(toy_graph.graph, news_items, update_rate)
 
-    my_simulation = Simulation(social_network)
+    my_simulation = Simulation(social_network, 60)
 
     animation = Animation(my_simulation)
     animation.on_execute()

@@ -52,8 +52,8 @@ class GraphData:
     def get_graph_image(self, time):
         visual_graph = get_visual_graph(self)
         file_name = 'Graph_Images/graph' + str(time) + '.png'
-        # visual_graph.graph.draw(file_name, prog='neato')
-        visual_graph.graph.draw(file_name, prog='fdp')
+        visual_graph.graph.draw(file_name, prog='circo')
+        #visual_graph.graph.draw(file_name, prog='fdp')
 
     @staticmethod
     def get_edge(user1, user2):

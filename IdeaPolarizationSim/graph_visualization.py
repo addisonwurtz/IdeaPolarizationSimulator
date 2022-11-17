@@ -18,7 +18,7 @@ def get_visual_graph(graph_data):
 class VisualGraph:
     def __init__(self):
         self.graph = pgv.AGraph(directed=False, center='True', bgcolor='transparent',
-                                background='transparent', start=1)
+                                background='transparent', start=1, K=1)
         self.graph.node_attr['shape'] = 'circle'
         self.graph.node_attr['style'] = 'filled'
 

@@ -8,8 +8,9 @@ import toy_graph
 
 
 class Simulation:
-    def __init__(self, social_network):
+    def __init__(self, social_network, max_time):
         self.social_network = social_network
+        self.max_time = max_time
         self.time = 0
         self.news_iterator = iter(self.social_network.news_items)
         self.current_news_item = next(self.news_iterator)
