@@ -8,7 +8,7 @@ from IdeaPolarizationSim.simulation import Simulation
 from IdeaPolarizationSim.simulation_classes import NewsItem
 
 
-class App:
+class Animation:
     def __init__(self, simulation):
         self._running = True
         self._display_surf = None
@@ -67,5 +67,5 @@ class App:
 if __name__ == "__main__":
     news_items =[NewsItem(1, 0, [toy_graph.user_1, toy_graph.user_6])]
     simulation = Simulation(toy_graph.nodes, news_items)
-    theApp = App(simulation)
+    theApp = Animation(simulation)
     theApp.on_execute()
