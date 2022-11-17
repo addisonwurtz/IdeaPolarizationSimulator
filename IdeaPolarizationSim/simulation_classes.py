@@ -7,13 +7,13 @@ from IdeaPolarizationSim.graph_visualization import get_visual_graph
 
 class SocialNetwork:
     def __init__(self, graph, news_items: [], update_rate):
-        self.graph = graph
+        self.graph_data = graph
         self.users = graph.nodes
         self.news_items = news_items
         self.update_rate = update_rate
 
     def probability_of_infection(self, user, neighbor, news_item):
-        edge_weight = self.graph.get_edge_weight(user, neighbor)
+        edge_weight = self.graph_data.get_edge_weight(user, neighbor)
         selective_exposure = (1 - edge_weight) * (1 - abs(news_item.opinion_score - neighbor.opinion_score))
         return (edge_weight ** 2) + selective_exposure
 
@@ -21,19 +21,19 @@ class SocialNetwork:
         if user not in news_item.infectious_users:
             raise UserNotInfectiousError(f'user {user.user_id} is not in the infectious user list for news item '
                                          f'{news_item.item_id}')
-        connections: [User] = user.get_connections()
-        for connection in connections:
+        # connections: [User] = user.get_connections()
+        for connection in user.connections:
             if connection not in news_item.inoculated_users:
                 if random() < self.probability_of_infection(user, connection, news_item):
                     news_item.infect_user(connection)
                     connection.update_opinion(news_item.opinion_score)
-                    self.graph.increase_connection_strength(user, connection)
+                    self.graph_data.increase_connection_strength(user, connection)
                 else:
-                    self.graph.decrease_connection_strength(user, connection)
+                    self.graph_data.decrease_connection_strength(user, connection)
         news_item.remove_user_from_infectious_list(user)
 
 
-class Graph_Data:
+class GraphData:
     def __init__(self, nodes: [], edge_weights: {}, update_rate=0.1):
         self.nodes = nodes
         self.edge_weights = edge_weights
@@ -51,9 +51,8 @@ class Graph_Data:
 
     def get_graph_image(self, time):
         visual_graph = get_visual_graph(self)
-
-
         file_name = 'Graph_Images/graph' + str(time) + '.png'
+        # visual_graph.graph.draw(file_name, prog='neato')
         visual_graph.graph.draw(file_name, prog='fdp')
 
     @staticmethod
@@ -91,10 +90,14 @@ class User:
         self.connections += new_connections
 
     def update_opinion(self, news_opinion_score):
-        if news_opinion_score > self.opinion_score:
-            self.opinion_score += self.update_rate * news_opinion_score
-        elif news_opinion_score < self.opinion_score:
-            self.opinion_score -= self.update_rate * news_opinion_score
+        if news_opinion_score > self.opinion_score != 1:
+            self.opinion_score += abs(self.update_rate * news_opinion_score)
+            if self.opinion_score > 1:
+                self.opinion_score = 1
+        elif news_opinion_score < self.opinion_score != -1:
+            self.opinion_score -= abs(self.update_rate * news_opinion_score)
+            if self.opinion_score < -1:
+                self.opinion_score = -1
 
 
 class NewsItem:

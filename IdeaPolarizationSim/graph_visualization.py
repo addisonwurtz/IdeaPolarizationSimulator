@@ -1,3 +1,5 @@
+from math import ceil
+
 import pygraphviz as pgv
 
 
@@ -15,8 +17,8 @@ def get_visual_graph(graph_data):
 
 class VisualGraph:
     def __init__(self):
-        self.graph = pgv.AGraph(directed=False, center='True', bgcolor='white', label='Social Network',
-                                background='transparent')
+        self.graph = pgv.AGraph(directed=False, center='True', bgcolor='transparent',
+                                background='transparent', start=1)
         self.graph.node_attr['shape'] = 'circle'
         self.graph.node_attr['style'] = 'filled'
 
@@ -34,50 +36,12 @@ class VisualGraph:
 
     @staticmethod
     def get_node_color(opinion_score):
-        match opinion_score:
-            case -1:
-                return'#960064'
-            case -.9:
-                return'#960c64'
-            case -.8:
-                return'#961864'
-            case -.7:
-                return'#962464'
-            case -.6:
-                return '#963064'
-            case -.5:
-                return '#963c64'
-            case -.4:
-                return '#964864'
-            case -.3:
-                return '#965464'
-            case -.2:
-                return '#966064'
-            case -.1:
-                return '#966c64'
-            case 0:
-                return '#967864'
-            case .1:
-                return '#968464'
-            case .2:
-                return '#969064'
-            case .3:
-                return '#969c64'
-            case .4:
-                return '#96a864'
-            case .5:
-                return '#96b464'
-            case .5:
-                return '#96c064'
-            case .6:
-                return '#96cc64'
-            case .7:
-                return '#96d864'
-            case .8:
-                return '#96e464'
-            case .9:
-                return '#96f064'
-            case 1:
-                return '#96ff64'
-            case _:
-                return '#f6f000'
+        color_code = str(hex(ceil(abs(opinion_score) * 255)))[2:]
+        if opinion_score >= 0:
+            # score of 1 is yellow, 0 is bright green
+            return '#' + color_code + 'ff00'
+        else:
+            # score of -1 is aqua blue
+            return '#00ff' + color_code
+
+
