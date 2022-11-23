@@ -71,19 +71,7 @@ class Animation:
 if __name__ == "__main__":
     update_rate = 0.1
 
-    news_items = [NewsItem(1, -1, [toy_graph.user_5, toy_graph.user_6]),
-                  NewsItem(2, -1, [toy_graph.user_5, toy_graph.user_6]),
-                  NewsItem(3, -1, [toy_graph.user_5, toy_graph.user_6]),
-                  NewsItem(4, -1, [toy_graph.user_5, toy_graph.user_6]),
-                  NewsItem(5, -1, [toy_graph.user_5, toy_graph.user_6]),
-                  NewsItem(6, -1, [toy_graph.user_5, toy_graph.user_6]),
-                  NewsItem(7, 1, [toy_graph.user_1, toy_graph.user_2]),
-                  NewsItem(8, 1, [toy_graph.user_1, toy_graph.user_2]),
-                  NewsItem(9, 1, [toy_graph.user_1, toy_graph.user_2]),
-                  NewsItem(10, 1, [toy_graph.user_1, toy_graph.user_2]),
-                  NewsItem(11, 1, [toy_graph.user_1, toy_graph.user_2]),
-                  NewsItem(12, 1, [toy_graph.user_1, toy_graph.user_2])
-                  ]
+    news_items = toy_graph.news_items
 
     social_network = SocialNetwork(toy_graph.graph, news_items, update_rate)
 

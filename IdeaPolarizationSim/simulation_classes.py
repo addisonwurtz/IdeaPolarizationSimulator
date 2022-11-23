@@ -39,6 +39,18 @@ class GraphData:
         self.edge_weights = edge_weights
         self.update_rate = update_rate
 
+    def add_node(self, node):
+        self.nodes += node
+
+    def add_edge(self, edge, weight):
+        self.edge_weights[edge] = weight
+
+    def get_node(self, node_name):
+        for node in self.nodes:
+            if node.user_id == int(node_name):
+                return node
+        return None
+
     def increase_connection_strength(self, sender, receiver):
         edge = self.get_edge(sender, receiver)
         edge_weight = self.edge_weights[edge]
@@ -52,8 +64,8 @@ class GraphData:
     def get_graph_image(self, time):
         visual_graph = get_visual_graph(self)
         file_name = 'Graph_Images/graph' + str(time) + '.png'
-        visual_graph.graph.draw(file_name, prog='circo')
-        #visual_graph.graph.draw(file_name, prog='fdp')
+        # visual_graph.graph.draw(file_name, prog='circo')
+        visual_graph.graph.draw(file_name, prog='fdp')
 
     @staticmethod
     def get_edge(user1, user2):

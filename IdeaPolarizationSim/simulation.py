@@ -21,8 +21,6 @@ class Simulation:
 
         # for news_item in self.social_network.news_items:
         if self.current_news_item is not None:
-            # print(f'Nodes that can spread news item: {[user.user_id for user in self.current_news_item.infectious_users]}')
-            # print(f'Nodes that have been infected by news item: {[user.user_id for user in self.current_news_item.inoculated_users]}')
 
             for user in self.current_news_item.infectious_users:
                 try:
@@ -30,15 +28,12 @@ class Simulation:
                 except Exception as e:
                     print(e)
 
-            # print(f'Number of users infected with story: {len(self.current_news_item.inoculated_users)}')
-            # print(f'Users infected with story: '
-            #      f'{[inoculated_user.user_id for inoculated_user in self.current_news_item.inoculated_users]}')
             print(f'\nSimulation time: {self.time}\n')
 
             for user in self.social_network.graph_data.nodes:
                 print(f'User {user.user_id}\tOpinion Score: {user.opinion_score}')
 
-            self.social_network.graph_data.get_graph_image(self.time)  # Is this violating Law of Demeter?
+            self.social_network.graph_data.get_graph_image(self.time)
             try:
                 self.current_news_item = next(self.news_iterator)
             except StopIteration:

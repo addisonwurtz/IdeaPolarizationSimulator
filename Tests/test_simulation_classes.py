@@ -6,10 +6,10 @@ from IdeaPolarizationSim.simulation_classes import NewsItem, User, GraphData, So
 class TestSocialNetwork(unittest.TestCase):
     def test_probability_of_infection(self):
         from IdeaPolarizationSim import toy_graph
-        news_item = NewsItem(1, 0.8, [])
+        news_item = NewsItem(1, 1.0, [])
         social_network = SocialNetwork(toy_graph.graph, news_item, 0.1)
 
-        self.assertEqual(0.89, social_network.probability_of_infection(toy_graph.user_1, toy_graph.user_3, news_item))
+        self.assertEqual(0.55, social_network.probability_of_infection(toy_graph.user_1, toy_graph.user_3, news_item))
 
     def test_share_news_item(self):
         from IdeaPolarizationSim import toy_graph
@@ -45,8 +45,8 @@ class TestGraph(unittest.TestCase):
         test_graph = GraphData(toy_graph.nodes, toy_graph.edge_weights, 0.1)
         self.assertIn(toy_graph.user_1, test_graph.nodes)
         self.assertIn(toy_graph.user_5, test_graph.nodes)
-        self.assertEqual(test_graph.edge_weights[(1, 2)], 0.8)
-        self.assertEqual(test_graph.edge_weights[(3, 4)], 0.3)
+        self.assertEqual(test_graph.edge_weights[(1, 2)], 0.4)
+        self.assertEqual(test_graph.edge_weights[(3, 8)], 0.5)
         self.assertEqual(test_graph.update_rate, 0.1)
 
     def test_increase_connection_strength(self):
@@ -58,6 +58,14 @@ class TestGraph(unittest.TestCase):
 
         test_graph.increase_connection_strength(user1, user2)
         self.assertEqual(0.6, test_graph.edge_weights[(1, 2)])
+
+    def test_is_node_in_graph(self):
+        user = User(236, 1.0, [])
+        graph = GraphData([user], {})
+        self.assertIs(graph.get_node('236'), user)
+        self.assertIs(graph.get_node(236), user)
+        self.assertIsNone(graph.get_node('186'))
+        self.assertIsNone(graph.get_node(186))
 
     def test_decrease_connection_strength(self):
         user1 = User(1, 0.75, [])
@@ -162,7 +170,7 @@ class TestUser(unittest.TestCase):
         test_user = User(1, 0.75, [], opinion_update_rate)
         test_user.update_opinion(news_item_opinions_score)
 
-        self.assertEqual(test_user.opinion_score, 0.75 - opinion_update_rate * news_item_opinions_score)
+        self.assertEqual(test_user.opinion_score, 0.75 + opinion_update_rate * news_item_opinions_score)
 
 
 class TestNewsItem(unittest.TestCase):
