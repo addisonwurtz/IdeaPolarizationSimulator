@@ -42,7 +42,7 @@ class GraphBuilder:
     @staticmethod
     def assign_opinion_score():
         # return random.randint(-10, 10) / 10.0
-        return random.randint(-8, 8) / 10.0
+        return random.randint(-7, 7) / 10.0
 
     @staticmethod
     def assign_edge_weight():
