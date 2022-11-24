@@ -8,7 +8,7 @@ class AnimateGraphImages:
         self._running = True
         self._display_surf = None
         self._image_surf = None
-        self.size = self.width, self.height = 1400, 900
+        self.size = self.width, self.height = 1200, 900
         self.count = 0
 
     def on_init(self):

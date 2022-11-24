@@ -16,7 +16,7 @@ class Animation:
         self._running = True
         self._display_surf = None
         self._image_surf = None
-        self.size = self.width, self.height = 1600, 700
+        self.size = self.width, self.height = 1200, 900
         self.simulation = simulation
         self.time = 0
 
