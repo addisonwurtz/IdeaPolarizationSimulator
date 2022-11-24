@@ -1,12 +1,14 @@
 import os
+import random
 import sys
 
 import pygame
 from pygame import image
 from pygame.locals import *
 from IdeaPolarizationSim import toy_graph
+from IdeaPolarizationSim.graph_builder import GraphBuilder
 from IdeaPolarizationSim.simulation import Simulation
-from IdeaPolarizationSim.simulation_classes import NewsItem, SocialNetwork
+from IdeaPolarizationSim.simulation_classes import NewsItem, SocialNetwork, GraphData
 
 
 class Animation:
@@ -14,7 +16,7 @@ class Animation:
         self._running = True
         self._display_surf = None
         self._image_surf = None
-        self.size = self.width, self.height = 800, 600
+        self.size = self.width, self.height = 1600, 900
         self.simulation = simulation
         self.time = 0
 
@@ -42,7 +44,7 @@ class Animation:
 
     def on_render(self):
         self._display_surf.fill('white')
-        self._display_surf.blit(self._image_surf, (100, 50))
+        self._display_surf.blit(self._image_surf, (0, 0))
         pygame.display.flip()
         # pygame.time.delay(100)
 
@@ -71,9 +73,38 @@ class Animation:
 if __name__ == "__main__":
     update_rate = 0.1
 
-    news_items = toy_graph.news_items
+    graph = GraphData([], {})
+    graphBuilder = GraphBuilder(graph, '0.edges')
+    graphBuilder.build_graph()
 
-    social_network = SocialNetwork(toy_graph.graph, news_items, update_rate)
+    # news_items = toy_graph.news_items
+    news_items = [NewsItem(1, -1, [random.choice(graph.nodes)]),
+                  NewsItem(2, -1, [random.choice(graph.nodes)]),
+                  NewsItem(3, -1, [random.choice(graph.nodes)]),
+                  NewsItem(4, -1, [random.choice(graph.nodes)]),
+                  NewsItem(5, -1, [random.choice(graph.nodes)]),
+                  NewsItem(6, -1, [random.choice(graph.nodes)]),
+                  NewsItem(7, 1, [random.choice(graph.nodes)]),
+                  NewsItem(8, 1, [random.choice(graph.nodes)]),
+                  NewsItem(9, 1, [random.choice(graph.nodes)]),
+                  NewsItem(10, 1, [random.choice(graph.nodes)]),
+                  NewsItem(11, 1, [random.choice(graph.nodes)]),
+                  NewsItem(12, 1, [random.choice(graph.nodes)]),
+                  NewsItem(1, -1, [random.choice(graph.nodes)]),
+                  NewsItem(2, -1, [random.choice(graph.nodes)]),
+                  NewsItem(3, -1, [random.choice(graph.nodes)]),
+                  NewsItem(4, -1, [random.choice(graph.nodes)]),
+                  NewsItem(5, -1, [random.choice(graph.nodes)]),
+                  NewsItem(6, -1, [random.choice(graph.nodes)]),
+                  NewsItem(7, 1, [random.choice(graph.nodes)]),
+                  NewsItem(8, 1, [random.choice(graph.nodes)]),
+                  NewsItem(9, 1, [random.choice(graph.nodes)]),
+                  NewsItem(10, 1, [random.choice(graph.nodes)]),
+                  NewsItem(11, 1, [random.choice(graph.nodes)]),
+                  NewsItem(12, 1, [random.choice(graph.nodes)])
+                  ]
+
+    social_network = SocialNetwork(graph, news_items, update_rate)
 
     my_simulation = Simulation(social_network, 60)
 

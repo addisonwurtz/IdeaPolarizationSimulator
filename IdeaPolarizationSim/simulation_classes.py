@@ -21,7 +21,6 @@ class SocialNetwork:
         if user not in news_item.infectious_users:
             raise UserNotInfectiousError(f'user {user.user_id} is not in the infectious user list for news item '
                                          f'{news_item.item_id}')
-        # connections: [User] = user.get_connections()
         for connection in user.connections:
             if connection not in news_item.inoculated_users:
                 if random() < self.probability_of_infection(user, connection, news_item):
@@ -39,7 +38,7 @@ class GraphData:
         self.edge_weights = edge_weights
         self.update_rate = update_rate
 
-    def add_node(self, node):
+    def add_nodes(self, node):
         self.nodes += node
 
     def add_edge(self, edge, weight):
@@ -64,8 +63,8 @@ class GraphData:
     def get_graph_image(self, time):
         visual_graph = get_visual_graph(self)
         file_name = 'Graph_Images/graph' + str(time) + '.png'
-        # visual_graph.graph.draw(file_name, prog='circo')
-        visual_graph.graph.draw(file_name, prog='fdp')
+        visual_graph.graph.draw(file_name, prog='neato')
+        #visual_graph.graph.draw(file_name, prog='sfdp')
 
     @staticmethod
     def get_edge(user1, user2):
