@@ -1,6 +1,6 @@
 import random
 
-from IdeaPolarizationSim.simulation_classes import GraphData, User
+from IdeaPolarizationSim.simulation_classes import GraphData, User, NewsItem
 
 
 class GraphBuilder:
@@ -34,17 +34,24 @@ class GraphBuilder:
         user1 = self.graph.get_node(node1)
         user2 = self.graph.get_node(node2)
         if user1 is None:
-            user1 = User(node1, self.assign_opinion_score(), [])
+            user1 = User(node1, self.assign_opinion_score(), [], update_rate=self.graph.update_rate)
         if user2 is None:
-            user2 = User(node2, self.assign_opinion_score(), [])
+            user2 = User(node2, self.assign_opinion_score(), [], update_rate=self.graph.update_rate)
         return user1, user2
 
     @staticmethod
     def assign_opinion_score():
-        return random.randint(-10, 10) / 10.0
+        # return random.randint(-10, 10) / 10.0
+        return random.randint(-8, 8) / 10.0
 
     @staticmethod
     def assign_edge_weight():
         return random.randint(1, 5) / 10.0
 
-
+    def create_news_items(self):
+        news_items = []
+        for i in range(0, 10000):
+            news_items.append(NewsItem(i, random.choice([-1, -0.5, 0.5, 1]), [random.choice(self.graph.nodes),
+                                                                              random.choice(self.graph.nodes),
+                                                                              random.choice(self.graph.nodes)]))
+        return news_items

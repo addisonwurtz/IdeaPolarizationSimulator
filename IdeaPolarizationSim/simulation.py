@@ -30,14 +30,14 @@ class Simulation:
 
             print(f'\nSimulation time: {self.time}\n')
 
-            for user in self.social_network.graph_data.nodes:
-                print(f'User {user.user_id}\tOpinion Score: {user.opinion_score}')
-
-            self.social_network.graph_data.get_graph_image(self.time)
+            # for user in self.social_network.graph_data.nodes:
+            #    print(f'User {user.user_id}\tOpinion Score: {user.opinion_score}')
+            if self.time % 100 == 0:
+                self.social_network.graph_data.get_graph_image(self.time)
             try:
                 self.current_news_item = next(self.news_iterator)
             except StopIteration:
-                if self.time < 50:
+                if self.time < self.max_time:
                     self.news_iterator = iter(self.social_network.news_items)
                     self.current_news_item = next(self.news_iterator)
                 else:

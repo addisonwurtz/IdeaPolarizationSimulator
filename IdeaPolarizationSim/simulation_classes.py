@@ -33,7 +33,7 @@ class SocialNetwork:
 
 
 class GraphData:
-    def __init__(self, nodes: [], edge_weights: {}, update_rate=0.1):
+    def __init__(self, nodes: [], edge_weights: {}, update_rate):
         self.nodes = nodes
         self.edge_weights = edge_weights
         self.update_rate = update_rate
