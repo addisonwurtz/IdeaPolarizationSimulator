@@ -31,6 +31,7 @@ class Simulation:
             #    print(f'User {user.user_id}\tOpinion Score: {user.opinion_score}')
             if self.time % 100 == 0:
                 print(f'\nSimulation time: {self.time}\n')
+                self.social_network.graph_data.calculate_edge_homogeneity()
                 self.social_network.graph_data.get_graph_image(self.time)
             try:
                 self.current_news_item = next(self.news_iterator)

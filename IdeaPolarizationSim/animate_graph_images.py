@@ -25,7 +25,7 @@ class AnimateGraphImages:
             sys.exit()
 
     def on_loop(self):
-        if self.count < 10000:
+        if self.count <= 10000:
             # image_name = 'Graph_Images/graph' + str(self.count) + '.png'
             image_name = str(self.directory) + 'graph' + str(self.count) + '.png'
             self._image_surf = pygame.image.load(image_name)
@@ -36,7 +36,7 @@ class AnimateGraphImages:
 
     def on_render(self):
         self._display_surf.fill('white')
-        self._display_surf.blit(self._image_surf, (50, 50))
+        self._display_surf.blit(self._image_surf, (200, 50))
         pygame.display.flip()
         pygame.time.delay(100)
 

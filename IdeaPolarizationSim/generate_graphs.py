@@ -5,8 +5,8 @@ from IdeaPolarizationSim.simulation_classes import NewsItem, SocialNetwork, Grap
 if __name__ == "__main__":
     update_rate = 0.2
     time = 0
-    graph_size = 1000
-    max_time = 10000
+    graph_size = 300
+    max_time = 10001
 
     graph = GraphData([], {}, update_rate)
     graphBuilder = GraphBuilder(graph, '0.edges')
@@ -19,10 +19,6 @@ if __name__ == "__main__":
 
     my_simulation = Simulation(social_network, max_time)
 
-    # animation = Animation(my_simulation)
-    # animation.on_execute()
-
-    # Skip animation, just generate images
     while my_simulation.current_news_item is not None and my_simulation.time <= my_simulation.max_time:
         time = my_simulation.update_simulation()
 
