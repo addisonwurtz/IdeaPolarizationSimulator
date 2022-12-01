@@ -10,7 +10,6 @@ def get_visual_graph(graph_data):
 
     for edge in graph_data.edge_weights:
         visual_graph.graph.add_edge(edge)
-        # visual_graph.graph.add_edges_from(graph_data.edge_weights)
 
     return visual_graph
 
@@ -18,7 +17,7 @@ def get_visual_graph(graph_data):
 class VisualGraph:
     def __init__(self):
         self.graph = pgv.AGraph(directed=False, center='True', overlap=True, bgcolor='transparent',
-                                background='transparent', dim=2, ratio='1:2', size='22,8', start=1, K=1)
+                                background='transparent', dim=2, ratio='2:1', size='22,8', start=1, K=6)
         self.graph.node_attr['shape'] = 'circle'
         self.graph.node_attr['style'] = 'filled'
         self.graph.node_attr['fontcolor'] = 'white'

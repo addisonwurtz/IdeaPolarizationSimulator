@@ -17,8 +17,6 @@ class Simulation:
 
     def update_simulation(self):
 
-        self.time += 1
-
         # for news_item in self.social_network.news_items:
         if self.current_news_item is not None:
 
@@ -28,22 +26,24 @@ class Simulation:
                 except Exception as e:
                     print(e)
 
-            print(f'\nSimulation time: {self.time}\n')
 
             # for user in self.social_network.graph_data.nodes:
             #    print(f'User {user.user_id}\tOpinion Score: {user.opinion_score}')
             if self.time % 100 == 0:
+                print(f'\nSimulation time: {self.time}\n')
                 self.social_network.graph_data.get_graph_image(self.time)
             try:
                 self.current_news_item = next(self.news_iterator)
             except StopIteration:
-                if self.time < self.max_time:
+                if self.time <= self.max_time:
                     self.news_iterator = iter(self.social_network.news_items)
                     self.current_news_item = next(self.news_iterator)
                 else:
                     self.current_news_item = None
 
-            return self.time
+        self.time += 1
+
+        return self.time
 
 
 

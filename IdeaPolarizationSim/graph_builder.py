@@ -8,7 +8,7 @@ class GraphBuilder:
         self.graph = graph_data
         self.filename = filename
 
-    def build_graph(self):
+    def build_graph(self, graph_size):
         i = 0
         with open('C:/Users/addis/IdeaPolarizationSimulator/Data/' + self.filename) as file:
             for line in file.readlines():
@@ -19,7 +19,7 @@ class GraphBuilder:
                 self.graph.add_nodes([user1, user2])
                 self.graph.add_edge(self.graph.get_edge(user1, user2), self.assign_edge_weight())
 
-                if i > 200:
+                if i > graph_size:
                     break
                 else:
                     i += 1

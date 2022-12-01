@@ -1,14 +1,15 @@
+#!/usr/bin/python
 import sys
-
 import pygame
 
 
 class AnimateGraphImages:
-    def __init__(self):
+    def __init__(self, directory):
+        self.directory = directory
         self._running = True
         self._display_surf = None
         self._image_surf = None
-        self.size = self.width, self.height = 1200, 900
+        self.size = self.width, self.height = 1900, 1000
         self.count = 0
 
     def on_init(self):
@@ -17,7 +18,6 @@ class AnimateGraphImages:
         self._running = True
         self._display_surf.fill('white')
         pygame.display.update()
-        self._image_surf = pygame.image.load('Graph_Images/graph0.png').convert()
 
     def on_event(self, event):
         if event.type == pygame.QUIT:
@@ -26,7 +26,8 @@ class AnimateGraphImages:
 
     def on_loop(self):
         if self.count < 10000:
-            image_name = 'Graph_Images/graph' + str(self.count) + '.png'
+            # image_name = 'Graph_Images/graph' + str(self.count) + '.png'
+            image_name = str(self.directory) + 'graph' + str(self.count) + '.png'
             self._image_surf = pygame.image.load(image_name)
             self._image_surf.get_rect()
             self.count += 100
@@ -35,7 +36,7 @@ class AnimateGraphImages:
 
     def on_render(self):
         self._display_surf.fill('white')
-        self._display_surf.blit(self._image_surf, (200, 50))
+        self._display_surf.blit(self._image_surf, (50, 50))
         pygame.display.flip()
         pygame.time.delay(100)
 
@@ -55,5 +56,6 @@ class AnimateGraphImages:
 
 
 if __name__ == "__main__":
-    animation = AnimateGraphImages()
+    graph_directory = sys.argv[1]
+    animation = AnimateGraphImages(graph_directory)
     animation.on_execute()
