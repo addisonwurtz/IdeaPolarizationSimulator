@@ -30,7 +30,7 @@ class VisualGraph:
         self.graph.node_attr['width'] = 0.5
         self.graph.node_attr['height'] = 0.5
 
-        self.graph.edge_attr['penwidth'] = 0.15
+        self.graph.edge_attr['penwidth'] = 0.25
 
     def set_graph_attributes(self, time):
         # self.graph.graph_attr['label'] = 'Edge Homogeneity: ' + str(edge_homogeneity)
