@@ -21,7 +21,6 @@ class SocialNetwork:
         if user not in news_item.infectious_users:
             raise UserNotInfectiousError(f'user {user.user_id} is not in the infectious user list for news item '
                                          f'{news_item.item_id}')
-        # connections: [User] = user.get_connections()
         for connection in user.connections:
             if connection not in news_item.inoculated_users:
                 if random() < self.probability_of_infection(user, connection, news_item):
@@ -34,10 +33,24 @@ class SocialNetwork:
 
 
 class GraphData:
-    def __init__(self, nodes: [], edge_weights: {}, update_rate=0.1):
+    def __init__(self, nodes: [], edge_weights: {}, update_rate):
         self.nodes = nodes
         self.edge_weights = edge_weights
         self.update_rate = update_rate
+        # self.m_value = self.calculate_m_value()
+        self.edge_homogeneity = self.calculate_edge_homogeneity()
+
+    def add_nodes(self, node):
+        self.nodes += node
+
+    def add_edge(self, edge, weight):
+        self.edge_weights[edge] = weight
+
+    def get_node(self, node_name):
+        for node in self.nodes:
+            if node.user_id == int(node_name):
+                return node
+        return None
 
     def increase_connection_strength(self, sender, receiver):
         edge = self.get_edge(sender, receiver)
@@ -50,10 +63,10 @@ class GraphData:
         self.edge_weights[edge] = edge_weight - self.update_rate
 
     def get_graph_image(self, time):
-        visual_graph = get_visual_graph(self)
+        visual_graph = get_visual_graph(self, time)
         file_name = 'Graph_Images/graph' + str(time) + '.png'
-        visual_graph.graph.draw(file_name, prog='circo')
-        #visual_graph.graph.draw(file_name, prog='fdp')
+        visual_graph.graph.draw(file_name, prog='neato')
+        # visual_graph.graph.draw(file_name, prog='sfdp')
 
     @staticmethod
     def get_edge(user1, user2):
@@ -73,6 +86,22 @@ class GraphData:
             raise e
         except KeyError:
             raise KeyError(f'Error: Edge between user {user1.user_id} and user {user2.user_id} does not exist.')
+
+    def calculate_m_value(self):
+        pass
+
+    def calculate_edge_homogeneity(self):
+        sum_of_edge_weights = 0
+        sum_of_product_of_opinion_weights = 0
+
+        for node in self.nodes:
+            for connection in node.connections:
+                sum_of_edge_weights += self.get_edge_weight(node, connection)
+                sum_of_product_of_opinion_weights += self.get_edge_weight(node, connection) * node.opinion_score * connection.opinion_score
+        if sum_of_edge_weights == 0:
+            return 0
+        self.edge_homogeneity = sum_of_product_of_opinion_weights / sum_of_edge_weights
+        return self.edge_homogeneity
 
 
 class User:
