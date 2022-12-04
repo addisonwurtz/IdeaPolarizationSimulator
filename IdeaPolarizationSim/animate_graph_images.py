@@ -10,7 +10,7 @@ class AnimateGraphImages:
         self._display_surf = None
         self._image_surf = None
         self.static_image = None
-        self.size = self.width, self.height = 1900, 1000
+        self.size = self.width, self.height = 1900, 1100
         self.center = (950, 100)
         self.count = 0
         self.time_step = time_step
@@ -41,7 +41,6 @@ class AnimateGraphImages:
 
     def on_render(self):
         self._display_surf.fill('white')
-        # self._display_surf.blit(self._image_surf, (200, 50))
         self._display_surf.blit(self._image_surf, self.center)
         self._display_surf.blit(self.static_image, (50, 100))
         pygame.display.flip()
